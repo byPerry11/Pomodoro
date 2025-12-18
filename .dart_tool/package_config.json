@@ -134,6 +134,12 @@
       "languageVersion": "3.8"
     },
     {
+      "name": "google_fonts",
+      "rootUri": "file:///C:/Users/tagit/AppData/Local/Pub/Cache/hosted/pub.dev/google_fonts-6.3.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.9"
+    },
+    {
       "name": "http",
       "rootUri": "file:///C:/Users/tagit/AppData/Local/Pub/Cache/hosted/pub.dev/http-1.5.0",
       "packageUri": "lib/",
@@ -189,9 +195,9 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///C:/Users/tagit/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.16.0",
+      "rootUri": "file:///C:/Users/tagit/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.17.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.5"
     },
     {
       "name": "nested",
@@ -351,7 +357,7 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///C:/Users/tagit/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.6",
+      "rootUri": "file:///C:/Users/tagit/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.7",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
@@ -399,8 +405,8 @@
     }
   ],
   "generator": "pub",
-  "generatorVersion": "3.9.2",
+  "generatorVersion": "3.10.3",
   "flutterRoot": "file:///C:/Users/tagit/Documents/flutter",
-  "flutterVersion": "3.35.6",
+  "flutterVersion": "3.38.4",
   "pubCache": "file:///C:/Users/tagit/AppData/Local/Pub/Cache"
 }

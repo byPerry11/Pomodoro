@@ -1,3 +1,4 @@
+
 name: pomodoro_app
 description: A retro-tech styled Pomodoro timer app
 
@@ -15,6 +16,7 @@ dependencies:
   audioplayers: ^5.2.1
   shared_preferences: ^2.2.2
   provider: ^6.1.1
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:

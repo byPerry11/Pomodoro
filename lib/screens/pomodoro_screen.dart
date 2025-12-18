@@ -5,157 +5,63 @@ import '../models/timer_config.dart';
 import '../widgets/timer_display.dart';
 import '../widgets/custom_timer_dialog.dart';
 
+/// Pantalla principal del timer Pomodoro.
+/// Muestra el timer actual, permite seleccionar/configurar timers y muestra estadísticas.
 class PomodoroScreen extends StatelessWidget {
   const PomodoroScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => PomodoroService(),
-      child: const _PomodoroScreenContent(),
-    );
-  }
-}
-
-class _PomodoroScreenContent extends StatelessWidget {
-  const _PomodoroScreenContent();
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'POMODORO TIMER',
-          style: TextStyle(
-            fontFamily: 'Courier',
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () => _showConfigDialog(context),
-            icon: const Icon(Icons.settings),
-            tooltip: 'Timer Settings',
-          ),
-        ],
-      ),
       body: Consumer<PomodoroService>(
         builder: (context, pomodoroService, child) {
           return Container(
-            decoration: const BoxDecoration(
-              gradient: RadialGradient(
-                center: Alignment.center,
-                radius: 1.0,
-                colors: [
-                  Color(0xFF0A0A0A),
-                  Color(0xFF1A1A1A),
-                ],
-              ),
-            ),
+            color: Theme.of(context).scaffoldBackgroundColor,
             child: SafeArea(
-              child: Column(
+              child: Stack(
                 children: [
-                  // Timer configuration selector
-                  Container(
-                    margin: const EdgeInsets.all(16),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1A1A1A),
-                      border: Border.all(color: const Color(0xFF333333)),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
+                  // Main content - centered timer
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
-                          Icons.timer,
-                          color: Color(0xFF00FF41),
-                          size: 20,
+                        // Timer display
+                        TimerDisplay(
+                          state: pomodoroService.state,
+                          onStart: pomodoroService.startTimer,
+                          onPause: pomodoroService.pauseTimer,
+                          onReset: pomodoroService.resetTimer,
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            pomodoroService.state.config.name,
-                            style: const TextStyle(
-                              color: Color(0xFF00FF41),
-                              fontSize: 16,
-                              fontFamily: 'Courier',
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => _showConfigDialog(context),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: const Color(0xFF00FF41)),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: const Text(
-                              'CHANGE',
-                              style: TextStyle(
-                                color: Color(0xFF00FF41),
-                                fontSize: 12,
-                                fontFamily: 'Courier',
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
+                        
+                        const SizedBox(height: 40),
+                        
+                        // Cycle counter
+                        _buildCycleCounter(context, pomodoroService.state.completedPomodoros),
                       ],
                     ),
                   ),
                   
-                  // Main timer display
-                  Expanded(
-                    child: Center(
-                      child: TimerDisplay(
-                        state: pomodoroService.state,
-                        onStart: pomodoroService.startTimer,
-                        onPause: pomodoroService.pauseTimer,
-                        onReset: pomodoroService.resetTimer,
-                      ),
-                    ),
-                  ),
-                  
-                  // Bottom info
-                  Container(
-                    margin: const EdgeInsets.all(16),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1A1A1A),
-                      border: Border.all(color: const Color(0xFF333333)),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                  // Top-right buttons
+                  Positioned(
+                    top: 16,
+                    right: 16,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildInfoItem(
-                          'FOCUS',
-                          '${pomodoroService.state.config.focusMinutes}m',
-                          const Color(0xFF00FF41),
+                        // Music button
+                        _buildTopButton(
+                          context,
+                          Icons.music_note_outlined,
+                          () {
+                            // TODO: Implementar funcionalidad de música
+                          },
                         ),
-                        Container(
-                          width: 1,
-                          height: 30,
-                          color: const Color(0xFF333333),
-                        ),
-                        _buildInfoItem(
-                          'BREAK',
-                          '${pomodoroService.state.config.breakMinutes}m',
-                          const Color(0xFFFF6B35),
-                        ),
-                        Container(
-                          width: 1,
-                          height: 30,
-                          color: const Color(0xFF333333),
-                        ),
-                        _buildInfoItem(
-                          'COMPLETED',
-                          '${pomodoroService.state.completedPomodoros}',
-                          const Color(0xFF00FF41),
+                        const SizedBox(width: 12),
+                        
+                        // Settings button
+                        _buildTopButton(
+                          context,
+                          Icons.settings_outlined,
+                          () => _showConfigDialog(context),
                         ),
                       ],
                     ),
@@ -169,6 +75,66 @@ class _PomodoroScreenContent extends StatelessWidget {
     );
   }
 
+  /// Construye un botón pequeño para la parte superior
+  Widget _buildTopButton(BuildContext context, IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          border: Border.all(
+            color: Theme.of(context).colorScheme.outline,
+            width: 0.5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          icon,
+          color: Theme.of(context).colorScheme.onSurface,
+          size: 20,
+        ),
+      ),
+    );
+  }
+
+  /// Construye el contador de ciclos completados hoy
+  Widget _buildCycleCounter(BuildContext context, int completedCycles) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline,
+          width: 0.5,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.check_circle_outline,
+            color: Theme.of(context).colorScheme.secondary,
+            size: 18,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '$completedCycles ciclos completados hoy',
+            style: TextStyle(
+              fontSize: 13,
+              fontFamily: 'Courier',
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Construye un widget de información (etiqueta + valor).
+  /// Se usa para mostrar Focus, Break y Completed en el panel inferior.
   Widget _buildInfoItem(String label, String value, Color color) {
     return Column(
       children: [
@@ -196,65 +162,80 @@ class _PomodoroScreenContent extends StatelessWidget {
     );
   }
 
+  /// Muestra el diálogo de selección de timer.
+  /// Lista todos los timers disponibles (presets + personalizados) y permite crear uno nuevo.
+  /// Usa Consumer para ser reactivo y mostrar los nuevos timers cuando se agregan.
   void _showConfigDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1A1A),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: Color(0xFF00FF41), width: 2),
-        ),
-        title: const Text(
-          'SELECT TIMER',
-          style: TextStyle(
-            color: Color(0xFF00FF41),
-            fontFamily: 'Courier',
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Preset configurations
-            ...TimerConfig.presets.map((config) => _buildConfigOption(
-              context,
-              config,
-              config.name,
-              '${config.focusMinutes}min focus / ${config.breakMinutes}min break',
-            )),
-            
-            const SizedBox(height: 16),
-            const Divider(color: Color(0xFF333333)),
-            const SizedBox(height: 16),
-            
-            // Custom timer option
-            _buildConfigOption(
-              context,
-              null,
-              'CUSTOM TIMER',
-              'Create your own focus/break intervals',
-              isCustom: true,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text(
-              'CANCEL',
-              style: TextStyle(
-                color: Color(0xFF666666),
-                fontFamily: 'Courier',
-                fontWeight: FontWeight.bold,
+      builder: (context) => Consumer<PomodoroService>(
+        builder: (context, pomodoroService, child) {
+          return AlertDialog(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+                width: 0.5,
               ),
             ),
-          ),
-        ],
+            title: Text(
+              'Configurar Timer',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+              ),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Lista todas las configuraciones disponibles (presets + personalizadas)
+                  ...pomodoroService.allConfigs.map((config) => _buildConfigOption(
+                    context,
+                    config,
+                    config.name,
+                    '${config.focusMinutes}min focus / ${config.breakMinutes}min break',
+                  )),
+                  
+                  const SizedBox(height: 16),
+                  Divider(color: Theme.of(context).colorScheme.outline),
+                  const SizedBox(height: 16),
+                  
+                  // Opción para crear un nuevo timer personalizado
+                  _buildConfigOption(
+                    context,
+                    null,
+                    'Timer Personalizado',
+                    'Crear intervalos personalizados',
+                    isCustom: true,
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(
+                  'Cancelar',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 
+  /// Construye una opción de configuración de timer en el diálogo.
+  /// Si [isCustom] es true, muestra la opción para crear un nuevo timer personalizado.
+  /// Si [config] no es null, muestra una configuración existente para seleccionar.
   Widget _buildConfigOption(
     BuildContext context,
     TimerConfig? config,
@@ -266,45 +247,64 @@ class _PomodoroScreenContent extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
         onTap: () async {
-          Navigator.of(context).pop();
-          
           if (isCustom) {
+            // Obtiene el servicio antes de mostrar el diálogo anidado
+            // para asegurar que el contexto sea correcto
+            final service = context.read<PomodoroService>();
+            // Muestra el diálogo para crear un timer personalizado
             final result = await showDialog<TimerConfig>(
               context: context,
               builder: (context) => const CustomTimerDialog(),
             );
             
             if (result != null) {
-              context.read<PomodoroService>().updateConfig(result);
+              // Agrega la configuración personalizada y obtiene el config guardado
+              // (puede tener nombre único si había duplicados)
+              final savedConfig = await service.addCustomConfig(result);
+              
+              if (savedConfig != null) {
+                // Actualiza el timer para usar la configuración guardada
+                service.updateConfig(savedConfig);
+                
+                // Cierra el diálogo principal usando rootNavigator
+                // para evitar conflictos con diálogos anidados
+                if (context.mounted) {
+                  Navigator.of(context, rootNavigator: true).pop();
+                }
+              }
             }
           } else if (config != null) {
+            // Si es una configuración existente, simplemente la selecciona
             context.read<PomodoroService>().updateConfig(config);
+            Navigator.of(context).pop();
           }
         },
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
-          side: const BorderSide(color: Color(0xFF333333)),
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.outline,
+            width: 0.5,
+          ),
         ),
-        tileColor: const Color(0xFF0A0A0A),
+        tileColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           title,
-          style: const TextStyle(
-            color: Color(0xFF00FF41),
-            fontFamily: 'Courier',
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
           ),
         ),
         subtitle: Text(
           subtitle,
           style: TextStyle(
-            color: const Color(0xFF00FF41).withOpacity(0.7),
-            fontFamily: 'Courier',
+            color: Theme.of(context).colorScheme.secondary,
             fontSize: 12,
           ),
         ),
         trailing: Icon(
           isCustom ? Icons.add : Icons.arrow_forward_ios,
-          color: const Color(0xFF00FF41),
+          color: Theme.of(context).colorScheme.secondary,
           size: 16,
         ),
       ),

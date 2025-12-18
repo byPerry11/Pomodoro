@@ -40,4 +40,20 @@ class TimerConfig {
   int get hashCode {
     return focusMinutes.hashCode ^ breakMinutes.hashCode ^ name.hashCode;
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'focusMinutes': focusMinutes,
+      'breakMinutes': breakMinutes,
+      'name': name,
+    };
+  }
+
+  factory TimerConfig.fromJson(Map<String, dynamic> json) {
+    return TimerConfig(
+      focusMinutes: json['focusMinutes'],
+      breakMinutes: json['breakMinutes'],
+      name: json['name'],
+    );
+  }
 }
