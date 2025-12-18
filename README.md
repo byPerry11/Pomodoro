@@ -7,7 +7,7 @@ Una aplicación de temporizador Pomodoro con estilo retro-tech, desarrollada en 
 - ⏱️ **Temporizador Pomodoro** con ciclos de enfoque y descanso
 - 🎯 **Configuraciones preestablecidas**: 25/5 (Clásico) y 50/10 (Extendido)
 - ⚙️ **Configuración personalizada** para crear tus propios intervalos
-- 🎨 **Diseño retro-tech** con colores neón y tipografía monospace
+- 🎨 **Diseño retro-tech** Tonos simples y minimalistas para enfocarce en la sobriedad y evitar estimulos
 - 🔊 **Notificaciones sonoras** y hápticas
 - 📊 **Seguimiento de progreso** con contador de pomodoros completados
 - 🔄 **Ciclos automáticos** con descansos largos cada 4 pomodoros
@@ -63,11 +63,7 @@ lib/
 
 ## Características del Diseño
 
-- **Tema oscuro** con colores neón (verde #00FF41, naranja #FF6B35)
-- **Tipografía monospace** (Courier) para un look retro-tech
-- **Animaciones suaves** y efectos de progreso circular
-- **Interfaz minimalista** centrada en la funcionalidad
-- **Feedback háptico** para una mejor experiencia de usuario
+
 
 ## Contribuir
 
