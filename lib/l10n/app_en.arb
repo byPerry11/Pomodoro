@@ -1,0 +1,82 @@
+{
+  "appName": "Pomodoro App",
+  "navPomodoro": "Pomodoro",
+  "navGoals": "Goals",
+  "navGym": "Gym",
+  "navProfile": "Profile",
+  "tasksTitle": "My Goals",
+  "addTaskTitle": "New Goal",
+  "addTaskHint": "Goal title",
+  "addTaskDescHint": "Description (optional)",
+  "urgencyLabel": "Urgency",
+  "urgencyUrgent": "Urgent",
+  "urgencyNormal": "Normal",
+  "urgencyCanWait": "Can wait",
+  "saveButton": "Save",
+  "cancelButton": "Cancel",
+  "settingsTitle": "Settings",
+  "musicDialogTitle": "Background Music",
+  "musicNone": "None",
+  "musicWork": "Work",
+  "musicBreak": "Break",
+  "noTasks": "No tasks",
+  "tapPlusToAddTask": "Tap + to add a task",
+  "deleteTaskTitle": "Delete task",
+  "deleteTaskConfirm": "Are you sure you want to delete \"{taskTitle}\"?",
+  "@deleteTaskConfirm": {
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "clearCompletedTitle": "Clear completed",
+  "clearCompletedConfirm": "Delete all completed tasks?",
+  "deleteButton": "Delete",
+  "clearButton": "Clear",
+  "errorEmptyTitle": "Please enter a title",
+  "addTaskSubtitle": "Define your next goal",
+  "addTaskExample": "Ex: Complete project",
+  "addTaskDescPlaceholder": "Add extra details...",
+  "createButton": "Create",
+  "musicNoneDesc": "Absolute silence for better focus.",
+  "musicNoSounds": "No sounds available in this category.",
+  "doneButton": "Done",
+  "statsTitle": "Statistics",
+  "statsPomodoros": "Pomodoros completed today",
+  "statsCompletedTasks": "Tasks completed",
+  "statsPendingTasks": "Pending tasks",
+  "settingsNotifications": "Notifications",
+  "settingsNotificationsDesc": "Enable notifications when pomodoro completes",
+  "settingsSound": "Sound",
+  "settingsSoundDesc": "Play sound when timer finishes",
+  "settingsTheme": "Visual Theme",
+  "themeSystem": "Follow system settings",
+  "themeLight": "Always light mode",
+  "themeDark": "Always dark mode",
+  "themeSystemShort": "System",
+  "themeLightShort": "Light",
+  "themeDarkShort": "Dark",
+  "cyclesToday": "{count} cycles completed today",
+  "@cyclesToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timerConfigTitle": "Configure Timer",
+  "timerCustom": "Custom Timer",
+  "timerCustomDesc": "Create custom intervals",
+  "focusDisplay": "focus",
+  "breakDisplay": "break",
+  "gymTitle": "Training",
+  "gymMode": "Gym Mode",
+  "comingSoon": "Coming Soon...",
+  "timerDialogTitle": "New Timer",
+  "timerDialogSubtitle": "Customize your focus intervals",
+  "timerNameLabel": "Timer name",
+  "timerNameHint": "Ex: Deep work",
+  "timerFocusLabel": "Focus (min)",
+  "timerBreakLabel": "Break (min)"
+}
