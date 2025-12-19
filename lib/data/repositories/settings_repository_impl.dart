@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import '../../domain/repositories/settings_repository.dart';
@@ -67,6 +68,39 @@ class SettingsRepositoryImpl implements SettingsRepository {
   Future<void> setDarkMode(bool enabled) async {
     final settings = await _getSettings();
     settings.isDarkMode = enabled;
+    await _isar.writeTxn(() async {
+      await _isar.collection<SettingsModel>().put(settings);
+    });
+  }
+
+  @override
+  Future<Locale?> getLocale() async {
+    final settings = await _getSettings();
+    if (settings.localeCode != null) {
+      return Locale(settings.localeCode!);
+    }
+    return null;
+  }
+
+  @override
+  Future<void> setLocale(Locale? locale) async {
+    final settings = await _getSettings();
+    settings.localeCode = locale?.languageCode;
+    await _isar.writeTxn(() async {
+      await _isar.collection<SettingsModel>().put(settings);
+    });
+  }
+
+  @override
+  Future<String?> getUserName() async {
+    final settings = await _getSettings();
+    return settings.userName;
+  }
+
+  @override
+  Future<void> setUserName(String? name) async {
+    final settings = await _getSettings();
+    settings.userName = name;
     await _isar.writeTxn(() async {
       await _isar.collection<SettingsModel>().put(settings);
     });

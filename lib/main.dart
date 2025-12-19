@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:pomodoro_app/l10n/app_localizations.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'core/di/injection.dart';
 import 'core/router/app_router.dart';
@@ -10,9 +11,18 @@ import 'presentation/providers/pomodoro_service.dart';
 import 'presentation/providers/task_service.dart';
 import 'presentation/providers/settings_service.dart';
 import 'presentation/providers/music_service.dart';
+import 'presentation/providers/notification_service.dart';
+import 'presentation/providers/statistics_service.dart';
+import 'presentation/providers/auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp();
+
+  // Initialize notifications
+  await NotificationService.initialize();
 
   // Dependency Injection Initialization (includes Database)
   await configureDependencies();
@@ -40,6 +50,8 @@ class PomodoroApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: getIt<MusicService>()),
         ChangeNotifierProvider.value(value: getIt<TaskService>()),
         ChangeNotifierProvider.value(value: getIt<PomodoroService>()),
+        ChangeNotifierProvider.value(value: getIt<StatisticsService>()),
+        ChangeNotifierProvider.value(value: getIt<AuthService>()),
       ],
       child: Consumer<SettingsService>(
         builder: (context, settings, child) {
@@ -52,6 +64,7 @@ class PomodoroApp extends StatelessWidget {
             themeMode: settings.themeMode,
 
             // Localization
+            locale: settings.locale,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
 

@@ -12,6 +12,7 @@ class PomodoroState {
   final bool isRunning;
   final int completedPomodoros;
   final TimerConfig config;
+  final String? error;
 
   const PomodoroState({
     required this.remainingSeconds,
@@ -19,6 +20,7 @@ class PomodoroState {
     required this.isRunning,
     required this.completedPomodoros,
     required this.config,
+    this.error,
   });
 
   PomodoroState copyWith({
@@ -27,6 +29,7 @@ class PomodoroState {
     bool? isRunning,
     int? completedPomodoros,
     TimerConfig? config,
+    String? error,
   }) {
     return PomodoroState(
       remainingSeconds: remainingSeconds ?? this.remainingSeconds,
@@ -34,6 +37,7 @@ class PomodoroState {
       isRunning: isRunning ?? this.isRunning,
       completedPomodoros: completedPomodoros ?? this.completedPomodoros,
       config: config ?? this.config,
+      error: error ?? this.error,
     );
   }
 

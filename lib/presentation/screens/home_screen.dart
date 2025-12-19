@@ -1,16 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:pomodoro_app/l10n/app_localizations.dart';
+import '../providers/task_service.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
 
   const HomeScreen({super.key, required this.navigationShell});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<TaskService>().addListener(_handleTaskError);
+    });
+  }
+
+  @override
+  void dispose() {
+    context.read<TaskService>().removeListener(_handleTaskError);
+    super.dispose();
+  }
+
+  void _handleTaskError() {
+    final taskService = context.read<TaskService>();
+    if (taskService.error != null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(taskService.error!),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      taskService.clearError();
+    }
+  }
+
   void _onItemTapped(int index) {
-    navigationShell.goBranch(
+    widget.navigationShell.goBranch(
       index,
-      initialLocation: index == navigationShell.currentIndex,
+      initialLocation: index == widget.navigationShell.currentIndex,
     );
   }
 
@@ -18,7 +53,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      body: navigationShell,
+      body: widget.navigationShell,
       bottomNavigationBar: SafeArea(
         child: Container(
           height: 64,
@@ -82,7 +117,7 @@ class HomeScreen extends StatelessWidget {
     IconData activeIcon,
     String label,
   ) {
-    final isSelected = navigationShell.currentIndex == index;
+    final isSelected = widget.navigationShell.currentIndex == index;
     return GestureDetector(
       onTap: () => _onItemTapped(index),
       behavior: HitTestBehavior.opaque,

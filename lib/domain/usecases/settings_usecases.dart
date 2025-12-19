@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:injectable/injectable.dart';
 import '../repositories/settings_repository.dart';
 
@@ -42,4 +43,18 @@ class SetDarkMode {
   final SettingsRepository repository;
   SetDarkMode(this.repository);
   Future<void> call(bool enabled) => repository.setDarkMode(enabled);
+}
+
+@injectable
+class GetLocale {
+  final SettingsRepository repository;
+  GetLocale(this.repository);
+  Future<Locale?> call() => repository.getLocale();
+}
+
+@injectable
+class SetLocale {
+  final SettingsRepository repository;
+  SetLocale(this.repository);
+  Future<void> call(Locale? locale) => repository.setLocale(locale);
 }

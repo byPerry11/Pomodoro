@@ -12,6 +12,10 @@ class SettingsModel {
 
   bool isDarkMode = true;
 
+  String? localeCode;
+
+  String? userName;
+
   @Index(unique: true)
   String key = 'user_settings'; // Singleton key
 }

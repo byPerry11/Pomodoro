@@ -48,12 +48,9 @@ class MusicService extends ChangeNotifier {
 
   void selectTrack(MusicTrack? track) {
     _selectedTrack = track;
+    // Only stop if currently playing and track is set to null
     if (_isPlaying && track == null) {
       stop();
-    } else if (_isPlaying && track != null) {
-      play();
-    } else if (!_isPlaying && track != null) {
-      play();
     }
     notifyListeners();
   }

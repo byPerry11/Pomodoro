@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import '../../domain/usecases/settings_usecases.dart';
+import '../../domain/usecases/user_usecases.dart';
 
 @lazySingleton
 class SettingsService extends ChangeNotifier {
@@ -11,14 +12,25 @@ class SettingsService extends ChangeNotifier {
   final SetSoundEnabled _setSound;
   final GetDarkMode _getDarkMode;
   final SetDarkMode _setDarkMode;
+  final GetLocale _getLocale;
+
+  final SetLocale _setLocale;
+  final GetUserName _getUserName;
+  final SetUserName _setUserName;
 
   bool _notificationsEnabled = true;
   bool _soundEnabled = true;
   ThemeMode _themeMode = ThemeMode.system;
 
+  Locale? _locale;
+  String? _userName;
+
   bool get notificationsEnabled => _notificationsEnabled;
   bool get soundEnabled => _soundEnabled;
   ThemeMode get themeMode => _themeMode;
+
+  Locale? get locale => _locale;
+  String? get userName => _userName;
 
   SettingsService(
     this._getNotifications,
@@ -27,6 +39,10 @@ class SettingsService extends ChangeNotifier {
     this._setSound,
     this._getDarkMode,
     this._setDarkMode,
+    this._getLocale,
+    this._setLocale,
+    this._getUserName,
+    this._setUserName,
   ) {
     _loadSettings();
   }
@@ -37,6 +53,9 @@ class SettingsService extends ChangeNotifier {
 
     final isDark = await _getDarkMode();
     _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+
+    _locale = await _getLocale();
+    _userName = await _getUserName();
 
     notifyListeners();
   }
@@ -68,5 +87,17 @@ class SettingsService extends ChangeNotifier {
     _themeMode = mode;
     notifyListeners();
     await _setDarkMode(mode == ThemeMode.dark);
+  }
+
+  Future<void> setLocale(Locale? locale) async {
+    _locale = locale;
+    notifyListeners();
+    await _setLocale(locale);
+  }
+
+  Future<void> setUserName(String? name) async {
+    _userName = name;
+    notifyListeners();
+    await _setUserName(name);
   }
 }

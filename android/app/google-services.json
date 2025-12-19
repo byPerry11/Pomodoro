@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "932741058042",
+    "project_id": "pomodoroapp-9ae77",
+    "storage_bucket": "pomodoroapp-9ae77.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932741058042:android:82922d1d4d9f0febfbe843",
+        "android_client_info": {
+          "package_name": "com.corzo.pomo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "932741058042-ht7g482k6hta227f6hlotp20a2rkc1og.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.corzo.pomo",
+            "certificate_hash": "880dda3d00be80a27c9decfc99b5cb65ab1f4185"
+          }
+        },
+        {
+          "client_id": "932741058042-el1gt6e6ienve8qoqv9691brvr116icb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa21C6XIDyr9IWhHtR70S41fUHAL92yio"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932741058042-el1gt6e6ienve8qoqv9691brvr116icb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

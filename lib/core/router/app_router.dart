@@ -7,6 +7,8 @@ import '../../presentation/screens/pomodoro_screen.dart';
 import '../../presentation/screens/tasks_screen.dart';
 import '../../presentation/screens/gym_screen.dart';
 import '../../presentation/screens/profile_screen.dart';
+import '../../presentation/screens/statistics_screen.dart';
+import '../../presentation/screens/settings_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -63,6 +65,16 @@ class AppRouter {
                 pageBuilder: (context, state) => const NoTransitionPage(
                   child: ProfileScreen(),
                 ),
+                routes: [
+                  GoRoute(
+                    path: 'statistics',
+                    builder: (context, state) => const StatisticsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'settings',
+                    builder: (context, state) => const SettingsScreen(),
+                  ),
+                ],
               ),
             ],
           ),

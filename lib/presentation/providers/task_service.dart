@@ -11,8 +11,15 @@ class TaskService extends ChangeNotifier {
   final DeleteTask _deleteTask;
 
   List<Task> _tasks = [];
+  String? _error;
 
   List<Task> get tasks => _tasks;
+  String? get error => _error;
+
+  void clearError() {
+    _error = null;
+    notifyListeners();
+  }
 
   // Compatibility getters for UI
   List<Task> get pendingTasks => _tasks.where((t) => !t.isCompleted).toList();
@@ -28,8 +35,13 @@ class TaskService extends ChangeNotifier {
   }
 
   Future<void> _loadTasks() async {
-    _tasks = await _getTasks();
-    notifyListeners();
+    try {
+      _tasks = await _getTasks();
+    } catch (e) {
+      _error = 'Failed to load tasks: $e';
+    } finally {
+      notifyListeners();
+    }
   }
 
   Future<void> addTask(String title,
@@ -46,7 +58,13 @@ class TaskService extends ChangeNotifier {
     _tasks.insert(0, task);
     notifyListeners();
 
-    await _addTask(task);
+    try {
+      await _addTask(task);
+    } catch (e) {
+      _tasks.remove(task); // Rollback
+      _error = 'Failed to add task: $e';
+      notifyListeners();
+    }
   }
 
   Future<void> toggleTaskCompletion(Task task) async {
@@ -59,20 +77,51 @@ class TaskService extends ChangeNotifier {
     if (index != -1) {
       _tasks[index] = updatedTask;
       notifyListeners();
-      await _updateTask(updatedTask);
+      try {
+        await _updateTask(updatedTask);
+      } catch (e) {
+        _tasks[index] = task; // Rollback
+        _error = 'Failed to update task: $e';
+        notifyListeners();
+      }
     }
   }
 
   Future<void> deleteTask(String taskId) async {
-    _tasks.removeWhere((t) => t.id == taskId);
-    notifyListeners();
-    await _deleteTask(taskId);
+    final taskIndex = _tasks.indexWhere((t) => t.id == taskId);
+    final task = taskIndex != -1 ? _tasks[taskIndex] : null;
+
+    if (task != null) {
+      _tasks.removeAt(taskIndex);
+      notifyListeners();
+      try {
+        await _deleteTask(taskId);
+      } catch (e) {
+        _tasks.insert(taskIndex, task); // Rollback
+        _error = 'Failed to delete task: $e';
+        notifyListeners();
+      }
+    }
   }
 
   Future<void> clearCompletedTasks() async {
     final completed = _tasks.where((t) => t.isCompleted).toList();
-    for (final task in completed) {
-      await deleteTask(task.id);
+    if (completed.isEmpty) return;
+
+    // Optimistic update
+    _tasks.removeWhere((t) => t.isCompleted);
+    notifyListeners();
+
+    try {
+      // Batch delete in repository would be ideal, but for now we loop
+      // keeping the UI update singular.
+      for (final task in completed) {
+        await _deleteTask(task.id);
+      }
+    } catch (e) {
+      // Rollback (complex in batch, but we can reload)
+      _error = 'Failed to clear tasks: $e';
+      await _loadTasks(); // Reload source of truth
     }
   }
 }

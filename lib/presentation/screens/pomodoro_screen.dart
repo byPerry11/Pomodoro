@@ -10,8 +10,41 @@ import '../providers/music_service.dart';
 
 /// Pantalla principal del timer Pomodoro.
 /// Muestra el timer actual, permite seleccionar/configurar timers y muestra estadísticas.
-class PomodoroScreen extends StatelessWidget {
+class PomodoroScreen extends StatefulWidget {
   const PomodoroScreen({super.key});
+
+  @override
+  State<PomodoroScreen> createState() => _PomodoroScreenState();
+}
+
+class _PomodoroScreenState extends State<PomodoroScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<PomodoroService>().addListener(_handleError);
+    });
+  }
+
+  @override
+  void dispose() {
+    context.read<PomodoroService>().removeListener(_handleError);
+    super.dispose();
+  }
+
+  void _handleError() {
+    final service = context.read<PomodoroService>();
+    if (service.state.error != null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(service.state.error!),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      service.clearError();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
